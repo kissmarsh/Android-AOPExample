@@ -18,13 +18,13 @@ repositories {
 }
 
 dependencies {
-  compile project(':gintonic')
-  compile 'org.aspectj:aspectjrt:1.8.1'
+  implementation project(':gintonic')
+  implementation 'org.aspectj:aspectjrt:1.8.1'
 }
 
 android {
   compileSdkVersion 21
-  buildToolsVersion '21.1.2'
+  buildToolsVersion '28.0.3'
 
   defaultConfig {
     applicationId 'android10.org.viewgroupperformance'

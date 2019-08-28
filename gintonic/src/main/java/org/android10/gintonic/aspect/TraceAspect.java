@@ -4,6 +4,8 @@
  */
 package org.android10.gintonic.aspect;
 
+import android.text.TextUtils;
+
 import org.android10.gintonic.internal.DebugLog;
 import org.android10.gintonic.internal.StopWatch;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -34,14 +36,20 @@ public class TraceAspect {
   public Object weaveJoinPoint(ProceedingJoinPoint joinPoint) throws Throwable {
     MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
     String className = methodSignature.getDeclaringType().getSimpleName();
+    if (TextUtils.isEmpty(className)) {
+      className = methodSignature.getDeclaringTypeName();
+      className = className.substring(className.lastIndexOf('.')+1);
+    }
     String methodName = methodSignature.getName();
+    Object target = joinPoint.getTarget();
 
     final StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     Object result = joinPoint.proceed();
     stopWatch.stop();
 
-    DebugLog.log(className, buildLogMessage(methodName, stopWatch.getTotalTimeMillis()));
+    String message = buildLogMessage(target, methodName, stopWatch.getTotalTimeMillis(), joinPoint.getArgs());
+    DebugLog.log(className, message);
 
     return result;
   }
@@ -53,11 +61,22 @@ public class TraceAspect {
    * @param methodDuration Duration of the method in milliseconds.
    * @return A string representing message.
    */
-  private static String buildLogMessage(String methodName, long methodDuration) {
+  private static String buildLogMessage(Object target, String methodName, long methodDuration, Object[] args) {
     StringBuilder message = new StringBuilder();
     message.append("Gintonic --> ");
+    message.append(target);
+    message.append('.');
     message.append(methodName);
-    message.append(" --> ");
+
+    message.append('(');
+    for (Object arg : args) {
+      message.append(arg);
+      message.append(',');
+    }
+    if (message.charAt(message.length()-1) == ',') {
+      message.replace(message.length()-1, message.length(), "");
+    }
+    message.append(")--> ");
     message.append("[");
     message.append(methodDuration);
     message.append("ms");

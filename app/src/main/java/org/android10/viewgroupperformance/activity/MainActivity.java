@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import org.android10.gintonic.annotation.DebugTrace;
 import org.android10.viewgroupperformance.R;
 
 public class MainActivity extends Activity {
@@ -13,6 +15,7 @@ public class MainActivity extends Activity {
   private Button btnLinearLayoutTest;
   private Button btnFrameLayoutTest;
 
+  @DebugTrace
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -35,6 +38,7 @@ public class MainActivity extends Activity {
   }
 
   private View.OnClickListener btnRelativeLayoutOnClickListener = new View.OnClickListener() {
+    @DebugTrace
     @Override
     public void onClick(View v) {
       openActivity(RelativeLayoutTestActivity.class);
@@ -42,6 +46,7 @@ public class MainActivity extends Activity {
   };
 
   private View.OnClickListener btnLinearLayoutOnClickListener = new View.OnClickListener() {
+    @DebugTrace
     @Override
     public void onClick(View v) {
       openActivity(LinearLayoutTestActivity.class);
@@ -49,6 +54,7 @@ public class MainActivity extends Activity {
   };
 
   private View.OnClickListener btnFrameLayoutOnClickListener = new View.OnClickListener() {
+    @DebugTrace
     @Override
     public void onClick(View v) {
       openActivity(FrameLayoutTestActivity.class);
@@ -58,6 +64,7 @@ public class MainActivity extends Activity {
   /**
    * Open and activity
    */
+  @DebugTrace
   private void openActivity(Class activityToOpen) {
     Intent intent = new Intent(this, activityToOpen);
     startActivity(intent);
